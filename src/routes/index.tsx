@@ -1,21 +1,57 @@
+import Form from "@/components/MortgageForm";
 import { Title } from "@solidjs/meta";
+import { A } from "@solidjs/router";
+import { createResource, createSignal } from "solid-js";
 
 export default function Home() {
+ const [calculated] = createSignal(null);
+
  return (
-  <main class="contain-layout">
-   <h1>Hello Mum.</h1>
-   Mortgage Calculator Clear All Mortgage Amount Mortgage Term Interest Rate
-   Mortgage Type Repayment Interest Only Calculate Repayments Results shown here
-   Complete the form and click “calculate repayments” to see what your monthly
-   repayments would be. Your results Your results are shown below based on the
-   information you provided. To adjust the results, edit the form and click
-   “calculate repayments” again. Your monthly repayments Total you'll repay over
-   the term
-   <div class="attribution">
-    Challenge by{" "}
-    <a href="https://www.frontendmentor.io?ref=challenge">Frontend Mentor</a>.
-    Coded by <a href="#">Your Name Here</a>.
+  <main class="sm:container min-h-screen mx-auto text-slate-700 flex flex-col items-center justify-center bg-background">
+   <div
+    id="main-container"
+    class="w-3/4 min-h-screen relative sm:min-h-fit flex flex-col sm:flex-row sm:justify-start  "
+   >
+    <section class="bg-white relative p-6 basis-1/2 rounded-l-3xl  before:content-[''] before:absolute before:bg-transparent before:-bottom-[50px] before:-right-[25px] before:h-[50px] before:w-[25px] before:rounded-bl-[25px] before:shadow-[0_-25px_0px_0px_#133040]">
+     <header>
+      <h1 class="text-2xl md:text-3xl font-bold text-slate-900">
+       Mortgage Calculator
+      </h1>
+      <A title="Clear All" class="underline text-sm" href="/">
+       Clear All
+      </A>
+     </header>
+
+     <Form />
+    </section>
+
+    <section class="bg-darkslate basis-1/2 text-white flex flex-col gap-4 items-center md:justify-center p-8 rounded-r-3xl rounded-bl-3xl">
+     <img src="/illustration-empty.svg" />
+     <h2 class="text-xl">Results shown here</h2>
+     <p class="text-slate-300 text-center text-sm w-4/5">
+      Complete the form and click "calculate repayments" to see what your
+      monthly repayments would be.
+     </p>
+    </section>
    </div>
   </main>
  );
 }
+
+/*
+<h2>Your results</h2>
+     <p>
+      Your results Your results are shown below based on the information you
+      provided. To adjust the results, edit the form and click “calculate
+      repayments” again.
+     </p>
+
+     <article>
+      <span>Your monthly repayments</span>
+      <h3>$ 1797.74</h3>
+      <div>
+       <span>Total you'll repay over the term</span>
+       <h4>$ 1797.74</h4>
+      </div>
+     </article>
+*/
