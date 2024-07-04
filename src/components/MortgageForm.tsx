@@ -18,10 +18,34 @@ import {
  SelectTrigger,
  SelectValue,
 } from "@/components/ui/select";
+import { action, redirect } from "@solidjs/router";
+
+const calculateMortgage = action(async (formData: FormData) => {
+ "use server";
+ await new Promise((resolve, reject) => setTimeout(resolve, 1000));
+
+ const mortgageAmount = formData.get("mortgageAmount");
+ const mortgageAmountCurrency = formData.get("mortgageAmountCurrency");
+ const mortgageTerm = formData.get("mortgageTerm");
+ const mortgageTermDuration = formData.get("mortgageTermDuration");
+ const interestRateAmount = formData.get("interestRateAmount");
+
+ console.log(
+  mortgageAmount,
+  mortgageAmountCurrency,
+  mortgageTerm,
+  mortgageTermDuration,
+  interestRateAmount
+ );
+});
 
 export default function Form() {
  return (
-  <form action="" class="flex flex-col gap-6 my-2 text-slate-500">
+  <form
+   action={calculateMortgage}
+   method="post"
+   class="flex flex-col gap-6 my-2 text-slate-500"
+  >
    <TextFieldRoot>
     <TextFieldLabel>Mortgage Amount</TextFieldLabel>
     <div class="flex items-center border border-input rounded-md focus-visible:ring-[1.5px] focus-visible:ring-ring">
@@ -31,13 +55,20 @@ export default function Form() {
        <SelectItem item={props.item}>{props.item.rawValue}</SelectItem>
       )}
       defaultValue={"£"}
+      name="mortgageAmountCurrency"
      >
       <SelectTrigger>
        <SelectValue<string>>{(state) => state.selectedOption()}</SelectValue>
       </SelectTrigger>
       <SelectContent />
      </Select>
-     <TextField class="border-none" type="text" placeholder="" />
+     <TextField
+      class="border-none"
+      type="text"
+      name="mortgageAmount"
+      placeholder=""
+      required
+     />
     </div>
    </TextFieldRoot>
 
@@ -45,7 +76,13 @@ export default function Form() {
     <TextFieldRoot>
      <TextFieldLabel>Mortgage Term</TextFieldLabel>
      <div class="flex items-center border border-input rounded-md focus-visible:ring-[1.5px] focus-visible:ring-ring">
-      <TextField class="border-none" type="text" placeholder="" />
+      <TextField
+       class="border-none"
+       type="text"
+       name="mortgageTerm"
+       placeholder=""
+       required
+      />
       <Select
        options={["years", "months"]}
        itemComponent={(props) => (
@@ -53,6 +90,7 @@ export default function Form() {
        )}
        defaultValue={"years"}
        class="border-r-0"
+       name="mortgageTermDuration"
       >
        <SelectTrigger>
         <SelectValue<string>>{(state) => state.selectedOption()}</SelectValue>
@@ -65,7 +103,13 @@ export default function Form() {
     <TextFieldRoot class="">
      <TextFieldLabel>Interest Rate</TextFieldLabel>
      <div class="flex items-center border border-input rounded-md focus-visible:ring-[1.5px] focus-visible:ring-ring">
-      <TextField class="border-none" type="text" placeholder="" />
+      <TextField
+       class="border-none"
+       name="interestRateAmount"
+       type="text"
+       placeholder=""
+       required
+      />
 
       <Select
        options={["%"]}
@@ -102,7 +146,10 @@ export default function Form() {
     </RadioGroup>
    </TextFieldRoot>
 
-   <Button class="bg-mortgagelime text-darkslate py-2 px-6 rounded-3xl flex items-center gap-2 mx-auto">
+   <Button
+    class="bg-mortgagelime text-darkslate hover:text-mortgagelime py-2 px-6 rounded-3xl flex items-center gap-2 mx-auto"
+    type="submit"
+   >
     <svg
      xmlns="http://www.w3.org/2000/svg"
      width="24"
