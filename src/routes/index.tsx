@@ -10,11 +10,11 @@ export default function Home() {
   <main class="sm:container min-h-screen mx-auto text-slate-700 flex flex-col items-center justify-center bg-background">
    <div
     id="main-container"
-    class="w-3/4 min-h-screen relative sm:min-h-fit flex flex-col sm:flex-row sm:justify-start  "
+    class="md:w-3/4 min-h-screen relative sm:min-h-fit flex flex-col sm:flex-row sm:justify-start  "
    >
-    <section class="bg-white relative p-6 basis-1/2 rounded-l-3xl  before:content-[''] before:absolute before:bg-transparent before:-bottom-[50px] before:-right-[25px] before:h-[50px] before:w-[25px] before:rounded-bl-[25px] before:shadow-[0_-25px_0px_0px_#133040]">
-     <header>
-      <h1 class="text-2xl md:text-3xl font-bold text-slate-900">
+    <section class="bg-white relative p-6 basis-1/2 rounded-l-3xl  md:before:content-[''] before:absolute before:bg-transparent before:-bottom-[50px] before:-right-[25px] before:h-[50px] before:w-[25px] before:rounded-bl-[25px] before:shadow-[0_-25px_0px_0px_#133040]">
+     <header class="md:flex items-center justify-between py-4">
+      <h1 class="text-2xl md:text-3xl font-bold text-slate-700">
        Mortgage Calculator
       </h1>
       <A title="Clear All" class="underline text-sm" href="/">
@@ -25,7 +25,7 @@ export default function Home() {
      <Form />
     </section>
 
-    <section class="bg-darkslate basis-1/2 text-white flex flex-col gap-4 items-center md:justify-center p-8 rounded-r-3xl rounded-bl-3xl">
+    <section class="bg-darkslate basis-1/2 text-white flex flex-col gap-4 items-center md:justify-center p-8 md:rounded-r-3xl md:rounded-bl-3xl">
      <img src="/illustration-empty.svg" />
      <h2 class="text-xl">Results shown here</h2>
      <p class="text-slate-300 text-center text-sm w-4/5">

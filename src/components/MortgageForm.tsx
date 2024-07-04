@@ -11,24 +11,78 @@ import {
 } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
 import { For } from "solid-js";
+import {
+ Select,
+ SelectContent,
+ SelectItem,
+ SelectTrigger,
+ SelectValue,
+} from "@/components/ui/select";
 
 export default function Form() {
  return (
-  <form action="" class="flex flex-col gap-6 my-2">
+  <form action="" class="flex flex-col gap-6 my-2 text-slate-500">
    <TextFieldRoot>
     <TextFieldLabel>Mortgage Amount</TextFieldLabel>
-    <TextField type="number" placeholder="" />
+    <div class="flex items-center border border-input rounded-md focus-visible:ring-[1.5px] focus-visible:ring-ring">
+     <Select
+      options={["₦", "€", "₹", "KES", "$", "£"]}
+      itemComponent={(props) => (
+       <SelectItem item={props.item}>{props.item.rawValue}</SelectItem>
+      )}
+      defaultValue={"£"}
+     >
+      <SelectTrigger>
+       <SelectValue<string>>{(state) => state.selectedOption()}</SelectValue>
+      </SelectTrigger>
+      <SelectContent />
+     </Select>
+     <TextField class="border-none" type="text" placeholder="" />
+    </div>
    </TextFieldRoot>
 
-   <TextFieldRoot>
-    <TextFieldLabel>Mortgage Term</TextFieldLabel>
-    <TextField type="number" placeholder="" />
-   </TextFieldRoot>
+   <div class="md:flex items-center justify-between gap-8">
+    <TextFieldRoot>
+     <TextFieldLabel>Mortgage Term</TextFieldLabel>
+     <div class="flex items-center border border-input rounded-md focus-visible:ring-[1.5px] focus-visible:ring-ring">
+      <TextField class="border-none" type="text" placeholder="" />
+      <Select
+       options={["years", "months"]}
+       itemComponent={(props) => (
+        <SelectItem item={props.item}>{props.item.rawValue}</SelectItem>
+       )}
+       defaultValue={"years"}
+       class="border-r-0"
+      >
+       <SelectTrigger>
+        <SelectValue<string>>{(state) => state.selectedOption()}</SelectValue>
+       </SelectTrigger>
+       <SelectContent />
+      </Select>
+     </div>
+    </TextFieldRoot>
 
-   <TextFieldRoot>
-    <TextFieldLabel>Interest Rate</TextFieldLabel>
-    <TextField type="number" placeholder="" />
-   </TextFieldRoot>
+    <TextFieldRoot class="">
+     <TextFieldLabel>Interest Rate</TextFieldLabel>
+     <div class="flex items-center border border-input rounded-md focus-visible:ring-[1.5px] focus-visible:ring-ring">
+      <TextField class="border-none" type="text" placeholder="" />
+
+      <Select
+       options={["%"]}
+       itemComponent={(props) => (
+        <SelectItem item={props.item}>{props.item.rawValue}</SelectItem>
+       )}
+       defaultValue={"%"}
+       class="border-l-0"
+      >
+       <SelectTrigger>
+        <SelectValue<string>>{(state) => state.selectedOption()}</SelectValue>
+       </SelectTrigger>
+       <SelectContent />
+      </Select>
+     </div>
+    </TextFieldRoot>
+   </div>
 
    <TextFieldRoot>
     <TextFieldLabel>Mortgage Type</TextFieldLabel>
