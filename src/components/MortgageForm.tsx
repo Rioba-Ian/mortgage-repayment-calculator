@@ -18,7 +18,8 @@ import {
  SelectTrigger,
  SelectValue,
 } from "@/components/ui/select";
-import { action, redirect } from "@solidjs/router";
+import { action, redirect, useSubmission } from "@solidjs/router";
+import { Calculator, LoaderCircle } from "lucide-solid";
 
 const calculateMortgage = action(async (formData: FormData) => {
  "use server";
@@ -40,6 +41,7 @@ const calculateMortgage = action(async (formData: FormData) => {
 });
 
 export default function Form() {
+ const calculateMortgageAction = useSubmission(calculateMortgage);
  return (
   <form
    action={calculateMortgage}
@@ -150,18 +152,11 @@ export default function Form() {
     class="bg-mortgagelime text-darkslate hover:text-mortgagelime py-2 px-6 rounded-3xl flex items-center gap-2 mx-auto"
     type="submit"
    >
-    <svg
-     xmlns="http://www.w3.org/2000/svg"
-     width="24"
-     height="24"
-     fill="none"
-     viewBox="0 0 24 24"
-    >
-     <path
-      fill="#133041"
-      d="M18.75 2.25H5.25a1.5 1.5 0 0 0-1.5 1.5v16.5a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5V3.75a1.5 1.5 0 0 0-1.5-1.5Zm-10.5 16.5a1.125 1.125 0 1 1 0-2.25 1.125 1.125 0 0 1 0 2.25Zm0-3.75a1.125 1.125 0 1 1 0-2.25 1.125 1.125 0 0 1 0 2.25ZM12 18.75a1.125 1.125 0 1 1 0-2.25 1.125 1.125 0 0 1 0 2.25ZM12 15a1.125 1.125 0 1 1 0-2.25A1.125 1.125 0 0 1 12 15Zm3.75 3.75a1.125 1.125 0 1 1 0-2.25 1.125 1.125 0 0 1 0 2.25Zm0-3.75a1.125 1.125 0 1 1 0-2.25 1.125 1.125 0 0 1 0 2.25Zm1.5-5.25a.75.75 0 0 1-.75.75h-9a.75.75 0 0 1-.75-.75V6a.75.75 0 0 1 .75-.75h9a.75.75 0 0 1 .75.75v3.75Z"
-     />
-    </svg>
+    {calculateMortgageAction.pending ? (
+     <LoaderCircle class="animate-spin" />
+    ) : (
+     <Calculator class="text-slate-600 hover:text-white" />
+    )}
     <span>Calculate Repayments</span>
    </Button>
   </form>
