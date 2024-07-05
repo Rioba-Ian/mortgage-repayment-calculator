@@ -2,9 +2,12 @@ import Form from "@/components/MortgageForm";
 import { Title } from "@solidjs/meta";
 import { A } from "@solidjs/router";
 import { createResource, createSignal } from "solid-js";
+import mortgage from "@/store/mortgage";
 
 export default function Home() {
- const [calculated] = createSignal(null);
+ const [calculatedMortgage] = createSignal(0);
+
+ console.log(calculatedMortgage(), "calculatedMortgage>>>>>><<<<<<");
 
  return (
   <main class="sm:container min-h-screen mx-auto text-slate-700 flex flex-col items-center justify-center bg-background">
@@ -22,7 +25,7 @@ export default function Home() {
       </A>
      </header>
 
-     <Form />
+     <Form finalValue={calculatedMortgage()} />
     </section>
 
     <section class="bg-darkslate basis-1/2 text-white flex flex-col gap-4 items-center md:justify-center p-8 md:rounded-r-3xl md:rounded-bl-3xl">
@@ -35,6 +38,33 @@ export default function Home() {
     </section>
    </div>
   </main>
+ );
+}
+
+function Results() {
+ return (
+  <article>
+   <h3 class="text-lg md:text-xl text-slate-100 font-medium">Your results</h3>
+   <p>
+    Your results Your results are shown below based on the information you
+    provided. To adjust the results, edit the form and click “calculate
+    repayments” again.
+   </p>
+
+   <div id="card" class="divide-y divide-slate-600">
+    <div>
+     <span class="text-sm text-slate-300">Your monthly repayments</span>
+     <h4 class="text-mortgagelime text-3xl md:text-4xl font-bold">
+      $ 1,797.74
+     </h4>
+    </div>
+
+    <div>
+     <span>Total you'll repay over the term</span>
+     <h4>$ 1797.74</h4>
+    </div>
+   </div>
+  </article>
  );
 }
 

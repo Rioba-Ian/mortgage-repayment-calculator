@@ -10,7 +10,7 @@ import {
  RadioGroupItemLabel,
 } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
-import { For } from "solid-js";
+import { For, ValidComponent, createSignal } from "solid-js";
 import {
  Select,
  SelectContent,
@@ -20,28 +20,48 @@ import {
 } from "@/components/ui/select";
 import { action, redirect, useSubmission } from "@solidjs/router";
 import { Calculator, LoaderCircle } from "lucide-solid";
+import mortgage from "@/store/mortgage";
+import type { JSX } from "solid-js";
+import { PolymorphicProps } from "@kobalte/core/polymorphic";
+import { calculateMortgageFormula } from "@/libs/mortgage";
 
 const calculateMortgage = action(async (formData: FormData) => {
  "use server";
  await new Promise((resolve, reject) => setTimeout(resolve, 1000));
 
+ let months: number = 0;
  const mortgageAmount = formData.get("mortgageAmount");
  const mortgageAmountCurrency = formData.get("mortgageAmountCurrency");
- const mortgageTerm = formData.get("mortgageTerm");
+ const mortgageTerm = Number(formData.get("mortgageTerm"));
  const mortgageTermDuration = formData.get("mortgageTermDuration");
  const interestRateAmount = formData.get("interestRateAmount");
 
- console.log(
-  mortgageAmount,
-  mortgageAmountCurrency,
-  mortgageTerm,
-  mortgageTermDuration,
-  interestRateAmount
+ if (!mortgageAmount || !mortgageTerm || !interestRateAmount) {
+  throw new Error(
+   "mortgageAmount, mortgageTerm, interestRateAmount are required"
+  );
+ }
+
+ if (mortgageTermDuration === "years") {
+  months = mortgageTerm * 12;
+ }
+
+ const result = calculateMortgageFormula(
+  Number(mortgageAmount),
+  months,
+  Number(interestRateAmount)
  );
+
+ return result;
 });
 
-export default function Form() {
+export default function Form(props: { finalValue: number }) {
+ const { finalValue } = props;
+ const { calculatedMortgage, setCalculatedMortgage } = mortgage;
  const calculateMortgageAction = useSubmission(calculateMortgage);
+
+ console.log(calculateMortgageAction.result);
+
  return (
   <form
    action={calculateMortgage}
