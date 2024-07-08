@@ -10,7 +10,7 @@ import {
  RadioGroupItemLabel,
 } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
-import { For, ValidComponent, createSignal } from "solid-js";
+import { For, ValidComponent, createEffect, createSignal } from "solid-js";
 import {
  Select,
  SelectContent,
@@ -18,12 +18,10 @@ import {
  SelectTrigger,
  SelectValue,
 } from "@/components/ui/select";
-import { action, redirect, useSubmission } from "@solidjs/router";
+import { action, useSubmission } from "@solidjs/router";
 import { Calculator, LoaderCircle } from "lucide-solid";
 import mortgage from "@/store/mortgage";
-import type { JSX } from "solid-js";
-import { PolymorphicProps } from "@kobalte/core/polymorphic";
-import { calculateMortgageFormula } from "@/libs/mortgage";
+import { MortgageT, calculateMortgageFormula } from "@/libs/mortgage";
 
 const calculateMortgage = action(async (formData: FormData) => {
  "use server";
@@ -31,7 +29,9 @@ const calculateMortgage = action(async (formData: FormData) => {
 
  let months: number = 0;
  const mortgageAmount = formData.get("mortgageAmount");
- const mortgageAmountCurrency = formData.get("mortgageAmountCurrency");
+ const mortgageAmountCurrency = formData.get(
+  "mortgageAmountCurrency"
+ ) as string;
  const mortgageTerm = Number(formData.get("mortgageTerm"));
  const mortgageTermDuration = formData.get("mortgageTermDuration");
  const interestRateAmount = formData.get("interestRateAmount");
@@ -50,15 +50,22 @@ const calculateMortgage = action(async (formData: FormData) => {
   Number(mortgageAmount),
   months,
   Number(interestRateAmount)
- );
+ ) satisfies MortgageT;
 
- return result;
+ return { result, mortgageAmountCurrency };
 });
 
-export default function Form(props: { finalValue: number }) {
- const { finalValue } = props;
- const { calculatedMortgage, setCalculatedMortgage } = mortgage;
+export default function Form() {
+ const { calculatedMortgage, setCalculatedMortgage, setSelectedCurrency } =
+  mortgage;
  const calculateMortgageAction = useSubmission(calculateMortgage);
+
+ createEffect(() => {
+  if (calculateMortgageAction.result) {
+   setCalculatedMortgage(calculateMortgageAction.result.result);
+   setSelectedCurrency(calculateMortgageAction.result.mortgageAmountCurrency);
+  }
+ });
 
  console.log(calculateMortgageAction.result);
 

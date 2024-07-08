@@ -1,13 +1,19 @@
 import Form from "@/components/MortgageForm";
 import { Title } from "@solidjs/meta";
 import { A } from "@solidjs/router";
-import { createResource, createSignal } from "solid-js";
+import {
+ JSX,
+ Component,
+ Show,
+ createResource,
+ createSignal,
+ createEffect,
+} from "solid-js";
 import mortgage from "@/store/mortgage";
+import { formatNumbertoCurrency } from "@/libs/mortgage";
 
 export default function Home() {
- const [calculatedMortgage] = createSignal(0);
-
- console.log(calculatedMortgage(), "calculatedMortgage>>>>>><<<<<<");
+ const { calculatedMortgage } = mortgage;
 
  return (
   <main class="sm:container min-h-screen mx-auto text-slate-700 flex flex-col items-center justify-center bg-background">
@@ -25,63 +31,75 @@ export default function Home() {
       </A>
      </header>
 
-     <Form finalValue={calculatedMortgage()} />
+     <Form />
     </section>
 
-    <section class="bg-darkslate basis-1/2 text-white flex flex-col gap-4 items-center md:justify-center p-8 md:rounded-r-3xl md:rounded-bl-3xl">
-     <img src="/illustration-empty.svg" />
-     <h2 class="text-xl">Results shown here</h2>
-     <p class="text-slate-300 text-center text-sm w-4/5">
-      Complete the form and click "calculate repayments" to see what your
-      monthly repayments would be.
-     </p>
+    <section class="bg-darkslate basis-1/2  md:rounded-r-3xl md:rounded-bl-3xl">
+     <Show
+      when={calculatedMortgage().monthlyPayment > 0}
+      fallback={<Instructions />}
+     >
+      <Results />
+     </Show>
     </section>
    </div>
   </main>
  );
 }
 
-function Results() {
+function Instructions(): JSX.Element {
  return (
-  <article>
-   <h3 class="text-lg md:text-xl text-slate-100 font-medium">Your results</h3>
-   <p>
-    Your results Your results are shown below based on the information you
-    provided. To adjust the results, edit the form and click “calculate
-    repayments” again.
+  <article class="text-white flex flex-col gap-4 items-center md:justify-center p-8">
+   <img src="/illustration-empty.svg" />
+   <h2 class="text-xl">Results shown here</h2>
+   <p class="text-slate-300 text-center text-sm w-4/5">
+    Complete the form and click "calculate repayments" to see what your monthly
+    repayments would be.
    </p>
+  </article>
+ );
+}
 
-   <div id="card" class="divide-y divide-slate-600">
-    <div>
+function Results() {
+ const { calculatedMortgage, selectedCurrency } = mortgage;
+
+ createEffect(() => {
+  console.log(calculatedMortgage());
+  console.log(selectedCurrency());
+ });
+
+ return (
+  <article class="text-white flex flex-col gap-4  md:justify-center p-8 md:space-y-8">
+   <div class="space-y-2">
+    <h3 class="text-lg md:text-xl text-slate-100 font-medium">Your results</h3>
+    <p class="text-slate-300 text-sm">
+     Your results Your results are shown below based on the information you
+     provided. To adjust the results, edit the form and click “calculate
+     repayments” again.
+    </p>
+   </div>
+
+   <div
+    id="card"
+    class="divide-y bg-verydarkslate p-6  border-t-4 border-t-mortgagelime rounded-xl divide-slate-600"
+   >
+    <div class="">
      <span class="text-sm text-slate-300">Your monthly repayments</span>
-     <h4 class="text-mortgagelime text-3xl md:text-4xl font-bold">
-      $ 1,797.74
+     <h4 class="text-mortgagelime text-4xl md:text-5xl font-bold py-4">
+      {formatNumbertoCurrency(
+       calculatedMortgage().monthlyPayment,
+       selectedCurrency()!
+      ).toString()}
      </h4>
     </div>
 
-    <div>
-     <span>Total you'll repay over the term</span>
-     <h4>$ 1797.74</h4>
+    <div class="py-4 md:space-y-4">
+     <span class="text-sm  text-slate-400">
+      Total you'll repay over the term
+     </span>
+     <h4 class="text-2xl md:text-3xl font-medium">$ 1797.74</h4>
     </div>
    </div>
   </article>
  );
 }
-
-/*
-<h2>Your results</h2>
-     <p>
-      Your results Your results are shown below based on the information you
-      provided. To adjust the results, edit the form and click “calculate
-      repayments” again.
-     </p>
-
-     <article>
-      <span>Your monthly repayments</span>
-      <h3>$ 1797.74</h3>
-      <div>
-       <span>Total you'll repay over the term</span>
-       <h4>$ 1797.74</h4>
-      </div>
-     </article>
-*/
