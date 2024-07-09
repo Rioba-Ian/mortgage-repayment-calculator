@@ -28,13 +28,26 @@ const calculateMortgage = action(async (formData: FormData) => {
  await new Promise((resolve, reject) => setTimeout(resolve, 1000));
 
  let months: number = 0;
- const mortgageAmount = formData.get("mortgageAmount");
- const mortgageAmountCurrency = formData.get(
-  "mortgageAmountCurrency"
- ) as string;
+ const mortgageAmount = Number(formData.get("mortgageAmount"));
+ const mortgageAmountCurrency =
+  (formData.get("mortgageAmountCurrency") as string) || "$";
  const mortgageTerm = Number(formData.get("mortgageTerm"));
- const mortgageTermDuration = formData.get("mortgageTermDuration");
- const interestRateAmount = formData.get("interestRateAmount");
+ const mortgageTermDuration = formData.get("mortgageTermDuration") || "years";
+ const interestRateAmount = Number(formData.get("interestRateAmount"));
+
+ console.log(
+  mortgageAmount,
+  mortgageTerm,
+  interestRateAmount,
+  mortgageTermDuration,
+  "form data>>>>"
+ );
+ console.log(
+  typeof mortgageAmount,
+  typeof mortgageTerm,
+  typeof interestRateAmount,
+  "form data types>>>>"
+ );
 
  if (!mortgageAmount || !mortgageTerm || !interestRateAmount) {
   throw new Error(
@@ -47,10 +60,12 @@ const calculateMortgage = action(async (formData: FormData) => {
  }
 
  const result = calculateMortgageFormula(
-  Number(mortgageAmount),
+  mortgageAmount,
   months,
-  Number(interestRateAmount)
+  interestRateAmount
  ) satisfies MortgageT;
+
+ console.log(result, "result from after action>>>>");
 
  return { result, mortgageAmountCurrency };
 });
@@ -65,9 +80,11 @@ export default function Form() {
    setCalculatedMortgage(calculateMortgageAction.result.result);
    setSelectedCurrency(calculateMortgageAction.result.mortgageAmountCurrency);
   }
- });
 
- console.log(calculateMortgageAction.result);
+  console.log(calculateMortgageAction.result, "inside effect >>>");
+ }, [calculateMortgageAction.pending]);
+
+ console.log(calculateMortgageAction.result, "form result>>>>");
 
  return (
   <form

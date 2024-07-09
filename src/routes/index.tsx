@@ -36,7 +36,10 @@ export default function Home() {
 
     <section class="bg-darkslate basis-1/2  md:rounded-r-3xl md:rounded-bl-3xl">
      <Show
-      when={calculatedMortgage().monthlyPayment > 0}
+      when={
+       calculatedMortgage().monthlyPayment &&
+       calculatedMortgage().mortgageTermInMonths > 0
+      }
       fallback={<Instructions />}
      >
       <Results />
@@ -64,8 +67,8 @@ function Results() {
  const { calculatedMortgage, selectedCurrency } = mortgage;
 
  createEffect(() => {
-  console.log(calculatedMortgage());
-  console.log(selectedCurrency());
+  console.log(calculatedMortgage(), "results>>>>");
+  console.log(selectedCurrency(), "selectedCurrency>>>>");
  });
 
  return (
@@ -86,18 +89,20 @@ function Results() {
     <div class="">
      <span class="text-sm text-slate-300">Your monthly repayments</span>
      <h4 class="text-mortgagelime text-4xl md:text-5xl font-bold py-4">
-      {formatNumbertoCurrency(
-       calculatedMortgage().monthlyPayment,
-       selectedCurrency()!
-      ).toString()}
+      {selectedCurrency()} {calculatedMortgage().monthlyPayment?.toFixed(2)}
      </h4>
+     <pre class="text-mortgagelime text-sm bg-darkslate">
+      {JSON.stringify(calculatedMortgage(), null, 2)}
+     </pre>
     </div>
 
     <div class="py-4 md:space-y-4">
      <span class="text-sm  text-slate-400">
       Total you'll repay over the term
      </span>
-     <h4 class="text-2xl md:text-3xl font-medium">$ 1797.74</h4>
+     <h4 class="text-2xl md:text-3xl font-medium">
+      {selectedCurrency()} {calculatedMortgage().totalMortgage?.toFixed(2)}
+     </h4>
     </div>
    </div>
   </article>
