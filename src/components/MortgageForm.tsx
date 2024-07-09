@@ -28,6 +28,7 @@ const calculateMortgage = action(async (formData: FormData) => {
  await new Promise((resolve, reject) => setTimeout(resolve, 1000));
 
  let months: number = 0;
+ let interestRateWhenMonths: number = 0;
  const mortgageAmount = Number(formData.get("mortgageAmount"));
  const mortgageAmountCurrency =
   (formData.get("mortgageAmountCurrency") as string) || "$";
@@ -42,12 +43,6 @@ const calculateMortgage = action(async (formData: FormData) => {
   mortgageTermDuration,
   "form data>>>>"
  );
- console.log(
-  typeof mortgageAmount,
-  typeof mortgageTerm,
-  typeof interestRateAmount,
-  "form data types>>>>"
- );
 
  if (!mortgageAmount || !mortgageTerm || !interestRateAmount) {
   throw new Error(
@@ -59,10 +54,16 @@ const calculateMortgage = action(async (formData: FormData) => {
   months = mortgageTerm * 12;
  }
 
+ if (mortgageTermDuration === "months") {
+  interestRateWhenMonths = interestRateAmount / 12;
+ }
+
  const result = calculateMortgageFormula(
   mortgageAmount,
   months,
-  interestRateAmount
+  mortgageTermDuration === "months"
+   ? interestRateWhenMonths
+   : interestRateAmount
  ) satisfies MortgageT;
 
  console.log(result, "result from after action>>>>");
