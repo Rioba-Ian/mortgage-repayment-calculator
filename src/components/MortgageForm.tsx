@@ -30,8 +30,9 @@ const calculateMortgage = action(async (formData: FormData) => {
  let months: number = 0;
  let interestRateWhenMonths: number = 0;
  const mortgageAmount = Number(formData.get("mortgageAmount"));
- const mortgageAmountCurrency =
-  (formData.get("mortgageAmountCurrency") as string) || "$";
+ const mortgageAmountCurrency = formData.get(
+  "mortgageAmountCurrency"
+ ) as string;
  const mortgageTerm = Number(formData.get("mortgageTerm"));
  const mortgageTermDuration = formData.get("mortgageTermDuration") || "years";
  const interestRateAmount = Number(formData.get("interestRateAmount"));
@@ -41,6 +42,7 @@ const calculateMortgage = action(async (formData: FormData) => {
   mortgageTerm,
   interestRateAmount,
   mortgageTermDuration,
+  mortgageAmountCurrency,
   "form data>>>>"
  );
 
@@ -97,12 +99,14 @@ export default function Form() {
     <TextFieldLabel>Mortgage Amount</TextFieldLabel>
     <div class="flex items-center border border-input rounded-md focus-visible:ring-[1.5px] focus-visible:ring-ring">
      <Select
-      options={["₦", "€", "₹", "KES", "$", "£"]}
-      itemComponent={(props) => (
-       <SelectItem item={props.item}>{props.item.rawValue}</SelectItem>
-      )}
-      defaultValue={"£"}
+      options={["$"]}
       name="mortgageAmountCurrency"
+      itemComponent={(props) => (
+       <SelectItem item={props.item} value={props.item.rawValue}>
+        {props.item.rawValue}
+       </SelectItem>
+      )}
+      defaultValue={"$"}
      >
       <SelectTrigger>
        <SelectValue<string>>{(state) => state.selectedOption()}</SelectValue>
@@ -131,9 +135,11 @@ export default function Form() {
        required
       />
       <Select
-       options={["years", "months"]}
+       options={["years"]}
        itemComponent={(props) => (
-        <SelectItem item={props.item}>{props.item.rawValue}</SelectItem>
+        <SelectItem item={props.item} value={props.item.rawValue}>
+         {props.item.rawValue}
+        </SelectItem>
        )}
        defaultValue={"years"}
        class="border-r-0"
