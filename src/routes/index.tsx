@@ -53,7 +53,10 @@ export default function Home() {
 function Instructions(): JSX.Element {
  return (
   <article class="text-white flex flex-col gap-4 items-center md:justify-center p-8">
-   <img src="/illustration-empty.svg" />
+   <img
+    src="/illustration-empty.svg"
+    alt="empty illustration for purposes of placeholder of a form not yet submitted."
+   />
    <h2 class="text-xl">Results shown here</h2>
    <p class="text-slate-300 text-center text-sm w-4/5">
     Complete the form and click "calculate repayments" to see what your monthly
